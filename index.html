@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnShare — Share Knowledge, Grow Together</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">Learn<span class="accent">Share</span></span>
+    </a>
+    <nav class="nav">
+      <a href="#materials" class="nav-link">Materials</a>
+      <a href="#categories" class="nav-link">Categories</a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+    <button class="btn btn-primary" id="uploadBtn">
+      <span class="btn-icon">+</span>
+      Share Material
+    </button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-badge">Free learning resources for everyone</p>
+        <h1>Discover &amp; share <span class="gradient-text">learning materials</span></h1>
+        <p class="hero-desc">
+          Notes, guides, cheat sheets, and tutorials — uploaded by learners like you.
+          Browse, download, and contribute to the community.
+        </p>
+        <div class="hero-actions">
+          <a href="#materials" class="btn btn-primary btn-lg">Explore Materials</a>
+          <button class="btn btn-ghost btn-lg" id="heroUploadBtn">Upload Yours</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-value" id="statMaterials">0</span>
+            <span class="stat-label">Materials</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statCategories">6</span>
+            <span class="stat-label">Categories</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statDownloads">0</span>
+            <span class="stat-label">Downloads</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="floating-card card-1">
+          <span class="card-emoji">🧮</span>
+          <span class="card-title">Calculus Notes</span>
+          <span class="card-meta">Math · PDF</span>
+        </div>
+        <div class="floating-card card-2">
+          <span class="card-emoji">💻</span>
+          <span class="card-title">JS Cheat Sheet</span>
+          <span class="card-meta">Programming</span>
+        </div>
+        <div class="floating-card card-3">
+          <span class="card-emoji">🔬</span>
+          <span class="card-title">Chemistry Lab</span>
+          <span class="card-meta">Science</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-section" id="materials">
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="search" id="searchInput" placeholder="Search materials by title, author, or tags..." autocomplete="off">
+      </div>
+      <div class="filters">
+        <button class="filter-chip active" data-category="all">All</button>
+        <button class="filter-chip" data-category="math">Math</button>
+        <button class="filter-chip" data-category="science">Science</button>
+        <button class="filter-chip" data-category="programming">Programming</button>
+        <button class="filter-chip" data-category="languages">Languages</button>
+        <button class="filter-chip" data-category="history">History</button>
+        <button class="filter-chip" data-category="art">Art & Design</button>
+      </div>
+      <div class="sort-row">
+        <label for="sortSelect">Sort by</label>
+        <select id="sortSelect">
+          <option value="newest">Newest first</option>
+          <option value="popular">Most downloaded</option>
+          <option value="title">Title A–Z</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="materials-grid" id="materialsGrid" aria-live="polite">
+      <!-- Cards injected by JS -->
+    </section>
+
+    <p class="empty-state hidden" id="emptyState">
+      No materials match your search. Try a different keyword or category.
+    </p>
+
+    <section class="categories-section" id="categories">
+      <h2>Browse by category</h2>
+      <div class="category-cards">
+        <article class="category-card" data-cat="math" style="--cat-color: #f472b6">
+          <span class="cat-icon">🧮</span>
+          <h3>Mathematics</h3>
+          <p>Algebra, calculus, statistics & more</p>
+        </article>
+        <article class="category-card" data-cat="science" style="--cat-color: #34d399">
+          <span class="cat-icon">🔬</span>
+          <h3>Science</h3>
+          <p>Physics, chemistry, biology labs</p>
+        </article>
+        <article class="category-card" data-cat="programming" style="--cat-color: #60a5fa">
+          <span class="cat-icon">💻</span>
+          <h3>Programming</h3>
+          <p>Code tutorials, docs & cheat sheets</p>
+        </article>
+        <article class="category-card" data-cat="languages" style="--cat-color: #fbbf24">
+          <span class="cat-icon">🌍</span>
+          <h3>Languages</h3>
+          <p>Vocabulary, grammar & conversation</p>
+        </article>
+        <article class="category-card" data-cat="history" style="--cat-color: #a78bfa">
+          <span class="cat-icon">📜</span>
+          <h3>History</h3>
+          <p>Timelines, essays & study guides</p>
+        </article>
+        <article class="category-card" data-cat="art" style="--cat-color: #fb7185">
+          <span class="cat-icon">🎨</span>
+          <h3>Art & Design</h3>
+          <p>Techniques, portfolios & theory</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-section" id="about">
+      <div class="about-card">
+        <h2>Built for learners</h2>
+        <p>
+          LearnShare is a community-driven platform where students and educators
+          exchange notes, guides, and study resources. Everything you upload stays
+          in your browser — perfect for demos and personal collections.
+        </p>
+        <ul class="about-features">
+          <li>Instant search & category filters</li>
+          <li>Track downloads per material</li>
+          <li>Add your own resources in seconds</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>LearnShare &copy; 2026 — Share knowledge freely.</p>
+  </footer>
+
+  <!-- Upload Modal -->
+  <div class="modal-overlay hidden" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      <h2 id="modalTitle">Share learning material</h2>
+      <form id="uploadForm">
+        <div class="form-group">
+          <label for="materialTitle">Title</label>
+          <input type="text" id="materialTitle" required placeholder="e.g. Introduction to Linear Algebra">
+        </div>
+        <div class="form-group">
+          <label for="materialAuthor">Author</label>
+          <input type="text" id="materialAuthor" required placeholder="Your name">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="materialCategory">Category</label>
+            <select id="materialCategory" required>
+              <option value="math">Math</option>
+              <option value="science">Science</option>
+              <option value="programming">Programming</option>
+              <option value="languages">Languages</option>
+              <option value="history">History</option>
+              <option value="art">Art & Design</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="materialType">File type</label>
+            <select id="materialType" required>
+              <option value="PDF">PDF</option>
+              <option value="DOC">DOC</option>
+              <option value="Slides">Slides</option>
+              <option value="Video">Video</option>
+              <option value="Notes">Notes</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="materialDesc">Description</label>
+          <textarea id="materialDesc" rows="3" required placeholder="What will learners get from this?"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="materialTags">Tags (comma separated)</label>
+          <input type="text" id="materialTags" placeholder="calculus, exam-prep, beginner">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Publish Material</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay hidden" id="detailOverlay" role="dialog" aria-modal="true">
+    <div class="modal modal-detail">
+      <button class="modal-close" id="detailClose" aria-label="Close">&times;</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast" role="status"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
