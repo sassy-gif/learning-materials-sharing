@@ -1,3 +1,7 @@
+const SUPABASE_URL = 'https://lqexmsqtvkijscqbjivy.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxxZXhtc3F0dmtpanNjcWJqaXZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDQ0NzcsImV4cCI6MjA5NzQyMDQ3N30.YKdq7dXwklaIGj2UBvMUktKB5TYMKVNMUqP3QZMDb8Q';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const STORAGE_KEY = 'learnshare_materials';
 const DOWNLOADS_KEY = 'learnshare_total_downloads';
 
@@ -384,6 +388,35 @@ function initModals() {
     closeUploadModal();
     showToast('Material published successfully!');
   });
+
+  document.getElementById('authBtn').addEventListener('click', () => {
+    document.getElementById('authOverlay').classList.remove('hidden');
+  });
+
+  document.getElementById('authClose').addEventListener('click', () => {
+    document.getElementById('authOverlay').classList.add('hidden');
+  });
+
+  document.getElementById('authOverlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+      document.getElementById('authOverlay').classList.add('hidden');
+    }
+  });
+
+  document.querySelectorAll('.auth-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.auth-tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      if (tab.dataset.tab === 'login') {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('signupForm').classList.add('hidden');
+      } else {
+        document.getElementById('signupForm').classList.remove('hidden');
+        document.getElementById('loginForm').classList.add('hidden');
+      }
+    });
+  });
 }
 
 function initMobileMenu() {
@@ -401,5 +434,63 @@ function init() {
   initModals();
   initMobileMenu();
 }
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
+  const username = document.getElementById('signupUsername').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const code = document.getElementById('signupCode').value.trim();
+
+  const { data: codeData, error: codeError } = await supabaseClient
+    .from('signup_codes')
+    .select('*')
+    .eq('code', code)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  if (codeError || !codeData) {
+    showToast('Invalid or inactive signup code.');
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    showToast('Signup failed: ' + error.message);
+    return;
+  }
+
+  await supabaseClient
+    .from('profiles')
+    .update({ username })
+    .eq('id', data.user.id);
+
+  showToast('Signup successful! You can now log in.');
+  document.getElementById('authOverlay').classList.add('hidden');
+  document.getElementById('signupForm').reset();
+});
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    showToast('Login failed: ' + error.message);
+    return;
+  }
+
+  showToast('Logged in successfully!');
+  document.getElementById('authOverlay').classList.add('hidden');
+  document.getElementById('loginForm').reset();
+});
 document.addEventListener('DOMContentLoaded', init);
